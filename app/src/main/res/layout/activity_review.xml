@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/review_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/on_surface_variant"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/review_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:gravity="center"
+        android:textColor="@color/on_surface"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/button_speak"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/speak"
+        android:src="@android:drawable/ic_btn_speak_now" />
+
+    <TextView
+        android:id="@+id/review_meaning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:textColor="@color/on_surface_variant"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/button_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="@string/review_show" />
+
+    <LinearLayout
+        android:id="@+id/grade_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_again"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/review_again"
+            android:textColor="#B3261E" />
+
+        <Button
+            android:id="@+id/button_hard"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/review_hard"
+            android:textColor="#8A5000" />
+
+        <Button
+            android:id="@+id/button_good"
+            style="?attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/review_good"
+            android:textColor="@color/primary" />
+    </LinearLayout>
+
+</LinearLayout>
