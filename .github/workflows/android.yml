@@ -14,8 +14,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.11.1'
-      - run: gradle :app:assembleDebug :app:testDebugUnitTest
+      - run: gradle :app:assembleDebug :app:assembleRelease :app:testDebugUnitTest
       - uses: actions/upload-artifact@v4
         with:
           name: phrase-pocket-debug
           path: app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phrase-pocket-unsigned-release
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          if-no-files-found: error

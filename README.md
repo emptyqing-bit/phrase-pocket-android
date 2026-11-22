@@ -1,5 +1,7 @@
 # Phrase Pocket for Android（随手收 · 安卓版）
 
+[下载 v0.1.1 安卓安装包](https://github.com/emptyqing-bit/phrase-pocket-android/releases/tag/v0.1.1)。支持 Android 8.0 及以上版本。
+
 桌面版"随手收"的 Android 原生实现（MVP）。刷视频时把想学的英文表达或备忘通过系统分享保存到收藏，主屏复习卡片帮你反复记忆。
 
 ## 功能（MVP）
