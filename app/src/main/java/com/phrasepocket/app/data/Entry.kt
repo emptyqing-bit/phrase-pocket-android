@@ -14,7 +14,9 @@ data class Entry(
     val nextReviewAt: Long = 0,
     val reviewCount: Int = 0,
     val intervalDays: Int = 0,
-    val easeFactor: Float = 2.5f
+    val easeFactor: Float = 2.5f,
+    val review: String? = null,
+    val reviewedAt: String? = null
 ) {
     companion object {
         const val TYPE_WORD = "word"

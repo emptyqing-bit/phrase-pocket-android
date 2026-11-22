@@ -25,6 +25,9 @@ interface EntryDao {
     @Update
     suspend fun update(entry: Entry)
 
+    @Query("UPDATE entries SET type = :type, text = :text, meaning = :meaning WHERE id = :id")
+    suspend fun editContent(id: Long, type: String, text: String, meaning: String)
+
     @Delete
     suspend fun delete(entry: Entry)
 
@@ -35,7 +38,7 @@ interface EntryDao {
     fun wordsWithMeaning(): List<Entry>
 
     @Query("SELECT * FROM entries WHERE type = 'word' AND nextReviewAt <= :now ORDER BY nextReviewAt ASC")
-    fun dueWords(now: Long): List<Entry>
+    suspend fun dueWords(now: Long): List<Entry>
 
     @Query("SELECT * FROM entries")
     fun allEntries(): List<Entry>

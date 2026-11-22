@@ -36,20 +36,22 @@ class DictionaryHelper(private val context: Context) {
 
     suspend fun importDatabase(uri: Uri): Boolean = withContext(Dispatchers.IO) {
         runCatching {
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                importedDbFile().outputStream().use { output -> input.copyTo(output) }
-            } ?: return@withContext false
-            // Validate the schema before accepting the file.
-            SQLiteDatabase.openDatabase(
-                importedDbFile().absolutePath, null, SQLiteDatabase.OPEN_READONLY
-            ).use { db ->
-                db.rawQuery("SELECT word, translation FROM stardict LIMIT 1", null).close()
+            val staged = File.createTempFile("dictionary-", ".db", context.filesDir)
+            try {
+                requireNotNull(context.contentResolver.openInputStream(uri)).use { input ->
+                    staged.outputStream().use { output -> input.copyTo(output) }
+                }
+                SQLiteDatabase.openDatabase(staged.absolutePath, null, SQLiteDatabase.OPEN_READONLY).use { db ->
+                    db.rawQuery("SELECT word, translation FROM stardict LIMIT 1", null).use {
+                        require(it.moveToFirst()) { "Empty dictionary" }
+                    }
+                }
+                android.system.Os.rename(staged.absolutePath, importedDbFile().absolutePath)
+                true
+            } finally {
+                staged.delete()
             }
-            true
-        }.getOrElse {
-            importedDbFile().delete()
-            false
-        }
+        }.getOrDefault(false)
     }
 
     suspend fun lookup(text: String): String? = withContext(Dispatchers.IO) {

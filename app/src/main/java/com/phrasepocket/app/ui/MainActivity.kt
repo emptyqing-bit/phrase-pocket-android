@@ -84,7 +84,14 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             uri ?: return@registerForActivityResult
             lifecycleScope.launch {
-                val count = com.phrasepocket.app.util.BackupManager.import(this@MainActivity, db.entryDao(), uri)
+                val count = try {
+                    com.phrasepocket.app.util.BackupManager.restore(this@MainActivity, db, uri)
+                } catch (cancel: kotlinx.coroutines.CancellationException) {
+                    throw cancel
+                } catch (error: Exception) {
+                    Toast.makeText(this@MainActivity, R.string.restore_failed, Toast.LENGTH_LONG).show()
+                    return@launch
+                }
                 ReviewWidgetProvider.refreshAll(this@MainActivity)
                 Toast.makeText(this@MainActivity, getString(R.string.restore_done, count), Toast.LENGTH_LONG).show()
             }
@@ -155,7 +162,7 @@ class MainActivity : AppCompatActivity() {
             this, lifecycleScope, entry, entry.type, dict, showTypeSelector = false
         ) { updated ->
             lifecycleScope.launch {
-                db.entryDao().update(updated.copy(id = entry.id, createdAt = entry.createdAt))
+                db.entryDao().editContent(entry.id, updated.type, updated.text, updated.meaning)
                 ReviewWidgetProvider.refreshAll(this@MainActivity)
             }
         }
