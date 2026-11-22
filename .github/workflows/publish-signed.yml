@@ -1,0 +1,22 @@
+name: Publish signed Android v0.1.1
+on:
+  push:
+    branches: [codex/publish-android-v0.1.1]
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify and publish signed APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          apk=release/PhrasePocket-Android-0.1.1.apk
+          echo "21b46c7b784dca4df9fdf491c84463cb96ffcf5d3f361ad25ccd7038bac7d595  $apk" | sha256sum --check
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --print-certs "$apk" > certificate.txt
+          grep -Fqx 'Signer #1 certificate SHA-256 digest: 660c1a8c939311f84f1cd9aa86913a577c8bb94a71ab861d6ccc8d029dccf0a0' certificate.txt
+          gh release create v0.1.1 "$apk" --target 916032bc62f456b2c6ec17d7c50c100899e9b423 --title "随手收 Android v0.1.1" --notes-file release/notes.md
