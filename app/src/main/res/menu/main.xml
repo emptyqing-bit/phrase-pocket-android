@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_floating"
+        android:title="@string/menu_floating"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_review"
+        android:title="@string/menu_review"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_backup"
+        android:title="@string/menu_backup"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_restore"
+        android:title="@string/menu_restore"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_ai_settings"
+        android:title="@string/menu_ai_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_import_dict"
+        android:title="@string/menu_import_dict"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_export_anki"
+        android:title="@string/menu_export_anki"
+        app:showAsAction="never" />
+
+</menu>
