@@ -16,7 +16,15 @@ import java.util.concurrent.Executors
 class ReviewWidgetProvider : AppWidgetProvider() {
 
     override fun onUpdate(context: Context, manager: AppWidgetManager, ids: IntArray) {
-        ids.forEach { updateWidget(context, manager, it) }
+        val pending = goAsync()
+        val appContext = context.applicationContext
+        executor.execute {
+            try {
+                ids.forEach { updateWidget(appContext, manager, it) }
+            } finally {
+                pending.finish()
+            }
+        }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -39,41 +47,33 @@ class ReviewWidgetProvider : AppWidgetProvider() {
             context.sendBroadcast(intent)
         }
 
-        private fun updateWidget(context: Context, manager: AppWidgetManager, id: Int) {
-            val pending = goAsync()
-            val appContext = context.applicationContext
-            executor.execute {
-                try {
-                    val views = RemoteViews(appContext.packageName, R.layout.widget_review)
-                    val entry = AppDatabase.get(appContext).entryDao().randomEntry()
-                    if (entry == null) {
-                        views.setTextViewText(R.id.widget_text, appContext.getString(R.string.widget_empty))
-                        views.setTextViewText(R.id.widget_meaning, "")
-                    } else {
-                        views.setTextViewText(R.id.widget_text, entry.text)
-                        views.setTextViewText(R.id.widget_meaning, entry.meaning)
-                    }
-
-                    val openIntent = PendingIntent.getActivity(
-                        appContext, 0, Intent(appContext, MainActivity::class.java),
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
-                    views.setOnClickPendingIntent(R.id.widget_root, openIntent)
-
-                    val refreshIntent = PendingIntent.getBroadcast(
-                        appContext, 1,
-                        Intent(appContext, ReviewWidgetProvider::class.java).apply {
-                            action = ACTION_REFRESH
-                        },
-                        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-                    )
-                    views.setOnClickPendingIntent(R.id.widget_refresh, refreshIntent)
-
-                    manager.updateAppWidget(id, views)
-                } finally {
-                    pending.finish()
-                }
+        private fun updateWidget(appContext: Context, manager: AppWidgetManager, id: Int) {
+            val views = RemoteViews(appContext.packageName, R.layout.widget_review)
+            val entry = AppDatabase.get(appContext).entryDao().randomEntry()
+            if (entry == null) {
+                views.setTextViewText(R.id.widget_text, appContext.getString(R.string.widget_empty))
+                views.setTextViewText(R.id.widget_meaning, "")
+            } else {
+                views.setTextViewText(R.id.widget_text, entry.text)
+                views.setTextViewText(R.id.widget_meaning, entry.meaning)
             }
+
+            val openIntent = PendingIntent.getActivity(
+                appContext, 0, Intent(appContext, MainActivity::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.widget_root, openIntent)
+
+            val refreshIntent = PendingIntent.getBroadcast(
+                appContext, 1,
+                Intent(appContext, ReviewWidgetProvider::class.java).apply {
+                    action = ACTION_REFRESH
+                },
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.widget_refresh, refreshIntent)
+
+            manager.updateAppWidget(id, views)
         }
     }
 }

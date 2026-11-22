@@ -41,7 +41,7 @@ class FloatingService : Service() {
         private const val NOTIF_ID = 42
     }
 
-    private lateinit var windowManager: WindowManager
+    private val windowManager by lazy { getSystemService(WINDOW_SERVICE) as WindowManager }
     private var ballView: View? = null
     private var panelView: View? = null
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -55,6 +55,10 @@ class FloatingService : Service() {
             return START_NOT_STICKY
         }
         startForeground(NOTIF_ID, buildNotification())
+        if (!android.provider.Settings.canDrawOverlays(this)) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
         if (ballView == null && panelView == null) showBall()
         return START_STICKY
     }

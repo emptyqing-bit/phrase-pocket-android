@@ -51,4 +51,5 @@
     <string name="ai_settings_hint">AI 为可选功能，使用你自己的接口和额度，App 不收取任何费用。留空地址即关闭。</string>
     <string name="ai_lookup">AI 释义</string>
     <string name="ai_failed">AI 调用失败：%1$s</string>
+    <string name="restore_failed">无法恢复备份，请检查文件后重试。</string>
 </resources>
