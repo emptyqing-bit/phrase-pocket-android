@@ -33,7 +33,7 @@ Kotlin · Room · ViewBinding · Material 3 · AppWidget · Storage Access Frame
 
 ```bash
 # Windows
-ggradlew.bat assembleDebug
+gradlew.bat assembleDebug
 # macOS / Linux
 ./gradlew assembleDebug
 ```
